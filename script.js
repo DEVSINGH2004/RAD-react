@@ -30,7 +30,7 @@ gsap.ticker.lagSmoothing(0);
    HELPERS
    ────────────────────────────────────────────── */
 function disableStack() { return window.innerHeight < 500; }
-function isMobile()     { return window.innerWidth  < 768; }
+function isMobile()     { return window.innerWidth  <= 1024; }
 
 /* ──────────────────────────────────────────────
    ELEMENTS
@@ -99,7 +99,7 @@ function setInitialState() {
   gsap.set(heroSection, {
     opacity  : 0,
     zIndex   : 25,
-    clipPath : aGapClip(1),
+    clipPath : isMobile() ? "none" : aGapClip(1),
   });
   gsap.set([heroPill, heroH1, heroP], { opacity: 1, y: 0 });
   gsap.set(heroFloats,  { opacity: 1, y: 0, scale: 1 });
@@ -148,7 +148,12 @@ function createIntro() {
       const s    = 1 + p * 17;
       const fade = gsap.utils.clamp(0, 1, (p - 0.93) / 0.07);
 
-      heroSection.style.clipPath = aGapClip(s);     
+      if (!isMobile()) {
+        heroSection.style.clipPath = aGapClip(s);     
+      } else {
+        heroSection.style.clipPath = "none";
+      }
+      
       gsap.set(heroSection,  { opacity: fade });
       gsap.set(introSection, { opacity: 1 - fade });
 
@@ -170,7 +175,7 @@ function createIntro() {
       gsap.set(logoWrapper, { scale: 1, force3D: true });
       measureLogo();
       gsap.set(introSection, { visibility: "visible", backgroundColor: "rgba(135,51,232,1)" });
-      gsap.set(heroSection,  { opacity: 0, zIndex: 25, clipPath: aGapClip(1) });
+      gsap.set(heroSection,  { opacity: 0, zIndex: 25, clipPath: isMobile() ? "none" : aGapClip(1) });
     },
   });
 }
@@ -209,6 +214,7 @@ function createServices() {
 
   const scene = document.querySelector(".service-stack-scene");
   const cards = gsap.utils.toArray(".service-card");
+  
   if (!scene || !cards.length) return;
 
   const reversed  = [...cards].reverse();
@@ -223,8 +229,8 @@ function createServices() {
 
   const tl = gsap.timeline({
     scrollTrigger: {
-      trigger      : scene,
-      start        : "top 20%",
+      trigger      : scene, 
+      start        : "top 12%",
       end          : `+=${(reversed.length - 1) * scrollPerCard}`,
       scrub        : 1,
       pin          : true,
@@ -324,7 +330,6 @@ function initPartners() {
       scrollTrigger: { trigger: title, start: "top 88%", toggleActions: "play none none reverse" },
       y: 60, opacity: 0, duration: 0.9, ease: "power3.out",
     });
-    // NOTE: Removed animated underline generation code per user request.
   }
 
   const row2Cards = gsap.utils.toArray(".row-2 .partner-card2, .row-2 .partner-card1");
@@ -399,8 +404,6 @@ function initPageStack() {
 
   if (!page2 || !page3) return;
 
-  // Pin Page 2 exactly when its bottom touches the bottom of the viewport
-  // pinSpacing: false ensures Page 3 seamlessly scrolls upwards over it
   ScrollTrigger.create({
     trigger: page2,
     start: "bottom bottom",
@@ -473,6 +476,8 @@ initWhy();
    11. CONTACT SECTION
    ────────────────────────────────────────────── */
 function initContact() {
+  if (isMobile()) return; 
+
   const card   = document.querySelector(".contact-card");
   const left   = document.querySelector(".contact-left");
   const right  = document.querySelector(".contact-right");
@@ -566,7 +571,7 @@ window.addEventListener("orientationchange", scheduleRebuild);
 window.addEventListener("load", () => {
   gsap.set(logoWrapper, { scale: 1, force3D: true });
   measureLogo();
-  gsap.set(heroSection, { clipPath: aGapClip(1) });
+  gsap.set(heroSection, { clipPath: isMobile() ? "none" : aGapClip(1) });
   ScrollTrigger.refresh(true);
   lockServicesTitle();
 });
