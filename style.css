@@ -810,6 +810,7 @@ body {
   width: 100%;
   padding: 2.5rem 0;
   overflow: hidden;
+  background-color: #250f2f;
 }
 
 .marquee-track {
@@ -819,7 +820,8 @@ body {
   will-change: transform;
 }
 
-.marquee-track img { height: 15rem; opacity: 0.8; flex-shrink: 0; }
+.marquee-track img { height: 15rem; opacity: 1; flex-shrink: 0; margin-right: 3rem; transition: all ease 1s;}
+.marquee-track img:hover{background-image: url('./assets/marquee-icon2.png'); background-position: center; background-size: cover; background-repeat: no-repeat;}
 
 @keyframes marqueeScroll {
   from { transform: translateX(0); }
