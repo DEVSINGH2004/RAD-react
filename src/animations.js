@@ -7,19 +7,18 @@ export const initLenis = () => {
     document.body.style.overflowX = "hidden";
 
     const lenis = new Lenis({
-        duration: 1.6,
-        easing: (t) => 1 - Math.pow(1 - t, 4),
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // More performant custom easing
         smoothWheel: true,
-        wheelMultiplier: 0.9,
-        touchMultiplier: 2.0,
+        wheelMultiplier: 1.0,
+        touchMultiplier: 1.5, // Better native feel on mobile
         infinite: false,
         syncTouch: true,
-        syncTouchLerp: 0.1,
     });
 
     lenis.on("scroll", ScrollTrigger.update);
     gsapCore.ticker.add(time => lenis.raf(time * 1000));
-    gsapCore.ticker.lagSmoothing(0);
+    gsapCore.ticker.lagSmoothing(500, 33); // Allows GSAP to catch up if a frame drops
 
     let bar = document.getElementById("scroll-progress");
     if (!bar) {
@@ -38,6 +37,11 @@ export const initAnimations = (lenis) => {
 
     // Optimize ScrollTrigger for mobile
     ScrollTrigger.config({ ignoreMobileResize: true });
+
+    // Attempt to normalize scroll to prevent address bar resize jank on mobile
+    if (ScrollTrigger.isTouch === 1) {
+        ScrollTrigger.normalizeScroll(true);
+    }
 
     function disableStack() { return window.innerHeight < 500; }
     function isMobile() { return window.innerWidth <= 1024; }
@@ -143,7 +147,10 @@ export const initAnimations = (lenis) => {
                     if (!isMobile()) {
                         heroSection.style.clipPath = aGapClip(s);
                     } else {
-                        heroSection.style.clipPath = "none";
+                        // Prevent continuous re-evaluation on mobile if already 'none'
+                        if (heroSection.style.clipPath !== "none") {
+                            heroSection.style.clipPath = "none";
+                        }
                     }
                     gsap.set(heroSection, { opacity: fade });
                 }
@@ -239,17 +246,33 @@ export const initAnimations = (lenis) => {
             });
         }
 
-        document.querySelectorAll(".premium-car").forEach((el, i) => {
-            gsap.to(el, {
-                y: isMobile() ? 6 : 12,
-                rotation: i % 2 === 0 ? 4 : -4,
-                duration: 3.2 + i * 0.4,
-                ease: "sine.inOut",
-                repeat: -1,
-                yoyo: true,
-                delay: i * 0.3,
-            });
-        });
+        const premiumCars = document.querySelectorAll(".premium-car");
+        if (premiumCars.length > 0) {
+            let carTime = 0;
+            const mobile = isMobile();
+
+            // Use requestAnimationFrame for infinite rotators instead of multiple heavy GSAP tweens
+            const animateCars = () => {
+                carTime += 0.015;
+                premiumCars.forEach((el, i) => {
+                    const yOffset = mobile ? 6 : 12;
+                    const rotBase = i % 2 === 0 ? 4 : -4;
+                    const phase = i * 0.5;
+                    const currentY = Math.sin(carTime + phase) * yOffset;
+                    const currentRot = Math.cos(carTime + phase) * rotBase;
+
+                    el.style.transform = `translate3d(0, ${currentY}px, 0) rotate(${currentRot}deg)`;
+                });
+
+                // Only continue animating if they are in viewport/active, otherwise pause? 
+                // For simplicity we will let it run, but translation is much cheaper this way.
+                requestAnimationFrame(animateCars);
+            };
+
+            // Kills existing GSAP tweens if they were running previously (on resize rebuilds)
+            gsap.killTweensOf(premiumCars);
+            requestAnimationFrame(animateCars);
+        }
     }
     createServices();
 

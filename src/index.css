@@ -117,6 +117,8 @@ body {
   position: absolute;
   pointer-events: none;
   will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
   z-index: 5;
 }
 
@@ -170,7 +172,10 @@ body {
   justify-content: center;
   opacity: 0;
   will-change: clip-path, opacity;
+  transform: translateZ(0);
+  /* Enforce GPU layer */
   transition: none;
+  /* Let GSAP handle everything */
 }
 
 .scroll-down {
@@ -1735,12 +1740,12 @@ body {
 
 
 .si-yt {
-  
+
   font-size: 0.5625rem;
 }
 
 .si-li {
-  
+
   font-size: 0.625rem;
 }
 
@@ -1945,7 +1950,7 @@ body {
 
 .premium-car {
   position: absolute;
-  top: 50%;
+  top: 10%;
   right: 6%;
   transform: translateY(-50%);
   width: 26.25rem;
