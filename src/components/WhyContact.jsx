@@ -12,7 +12,7 @@ const WhyContact = () => {
                             cultural connections that turn attention into loyalty and relevance into revenue.</p>
                     </div>
                     <div className="why-image">
-                        <img src="/assets/Glow.png" className="why-glow" alt="" />
+                        <img src="/assets/glow.png" className="why-glow" alt="" />
                         <img src="/assets/whyimg.png" className="why-main-img" alt="" />
                     </div>
                 </div>

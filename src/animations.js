@@ -7,8 +7,8 @@ export const initLenis = () => {
     document.body.style.overflowX = "hidden";
 
     const lenis = new Lenis({
-        duration: 2.0,
-        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        duration: 1.6,
+        easing: (t) => 1 - Math.pow(1 - t, 4),
         smoothWheel: true,
         wheelMultiplier: 0.9,
         touchMultiplier: 2.0,
@@ -151,10 +151,10 @@ export const initAnimations = (lenis) => {
 
                 if (fade > 0.6 && !navbarShown) {
                     navbarShown = true;
-                    if (heroNavbar) gsap.to(heroNavbar, { opacity: 1, duration: 0.35, ease: "power2.out", pointerEvents: "auto" });
+                    if (heroNavbar) gsap.to(heroNavbar, { opacity: 1, duration: 0.5, ease: "power4.out", pointerEvents: "auto" });
                 } else if (fade <= 0.6 && navbarShown) {
                     navbarShown = false;
-                    if (heroNavbar) gsap.to(heroNavbar, { opacity: 0, duration: 0.2, ease: "power2.in", pointerEvents: "none" });
+                    if (heroNavbar) gsap.to(heroNavbar, { opacity: 0, duration: 0.4, ease: "power3.inOut", pointerEvents: "none" });
                 }
             },
 
@@ -181,11 +181,11 @@ export const initAnimations = (lenis) => {
             trigger: aboutServices,
             start: "top top",
             onEnter: () => {
-                gsap.to(heroNavbar, { opacity: 0, duration: 0.3, ease: "power2.out", pointerEvents: "none" });
+                gsap.to(heroNavbar, { opacity: 0, duration: 0.45, ease: "power4.out", pointerEvents: "none" });
             },
             onLeaveBack: () => {
                 if (navbarShown) {
-                    gsap.to(heroNavbar, { opacity: 1, duration: 0.3, ease: "power2.out", pointerEvents: "auto" });
+                    gsap.to(heroNavbar, { opacity: 1, duration: 0.45, ease: "power4.out", pointerEvents: "auto" });
                 }
             },
         });
@@ -232,10 +232,10 @@ export const initAnimations = (lenis) => {
             tl.to(reversed[i], {
                 y: "-130%", opacity: 0,
                 rotation: gsap.utils.random(-4, 4),
-                scale: 0.92, ease: "power2.in", duration: 1,
+                scale: 0.92, ease: "power3.inOut", duration: 1,
             }, i);
             remaining.forEach((card, j) => {
-                tl.to(card, { y: peekY[j] || 0, scale: peekScale[j] || 1, ease: "power2.out", duration: 1 }, i);
+                tl.to(card, { y: peekY[j] || 0, scale: peekScale[j] || 1, ease: "power4.out", duration: 1 }, i);
             });
         }
 
@@ -265,7 +265,7 @@ export const initAnimations = (lenis) => {
 
         gsap.from(card, {
             scrollTrigger: { trigger: card, start: "top 85%", toggleActions: "play none none reverse" },
-            y: 80, scale: 0.95, opacity: 0, duration: 1.2, ease: "expo.out",
+            y: 80, scale: 0.95, opacity: 0, duration: 1.6, ease: "power4.out",
             onComplete: lockServicesTitle,
             onReverseComplete: lockServicesTitle,
         });
@@ -273,7 +273,7 @@ export const initAnimations = (lenis) => {
         if (textH && textP) {
             gsap.from([textH, textP], {
                 scrollTrigger: { trigger: card, start: "top 80%", toggleActions: "play none none reverse" },
-                y: 40, opacity: 0, duration: 1.2, stagger: 0.15, ease: "expo.out", delay: 0.2,
+                y: 40, opacity: 0, duration: 1.6, stagger: 0.08, ease: "power4.out", delay: 0.2,
                 onComplete: lockServicesTitle,
                 onReverseComplete: lockServicesTitle,
             });
@@ -313,7 +313,7 @@ export const initAnimations = (lenis) => {
         if (title) {
             gsap.from(title, {
                 scrollTrigger: { trigger: title, start: "top 88%", toggleActions: "play none none reverse" },
-                y: 60, scale: 0.95, opacity: 0, duration: 1.2, ease: "expo.out",
+                y: 60, scale: 0.95, opacity: 0, duration: 1.6, ease: "power4.out",
             });
         }
 
@@ -324,7 +324,7 @@ export const initAnimations = (lenis) => {
             if (group.length) {
                 gsap.from(group, {
                     scrollTrigger: { trigger: group[0], start: "top 88%", toggleActions: "play none none reverse" },
-                    y: 90, opacity: 0, scale: 0.94, duration: 1.2, stagger: 0.13, ease: "expo.out", delay: gi * 0.1,
+                    y: 90, opacity: 0, scale: 0.94, duration: 1.6, stagger: 0.08, ease: "power4.out", delay: gi * 0.1,
                 });
             }
         });
@@ -355,10 +355,10 @@ export const initAnimations = (lenis) => {
                 const r = card.getBoundingClientRect();
                 const rx = ((e.clientY - r.top - r.height / 2) / (r.height / 2)) * -8;
                 const ry = ((e.clientX - r.left - r.width / 2) / (r.width / 2)) * 8;
-                gsap.to(card, { rotateX: rx, rotateY: ry, scale: 1.03, duration: 0.35, ease: "power2.out", transformPerspective: 800 });
+                gsap.to(card, { rotateX: rx, rotateY: ry, scale: 1.03, duration: 0.5, ease: "power4.out", transformPerspective: 800 });
             });
             card.addEventListener("mouseleave", () => {
-                gsap.to(card, { rotateX: 0, rotateY: 0, scale: 1, duration: 0.55, ease: "power3.out" });
+                gsap.to(card, { rotateX: 0, rotateY: 0, scale: 1, duration: 0.55, ease: "power4.out" });
             });
         });
     }
@@ -370,11 +370,11 @@ export const initAnimations = (lenis) => {
 
         if (title) gsap.from(title, {
             scrollTrigger: { trigger: title, start: "top 88%", toggleActions: "play none none reverse" },
-            y: 55, opacity: 0, duration: 1.2, ease: "expo.out",
+            y: 55, opacity: 0, duration: 1.6, ease: "power4.out",
         });
         if (strip) gsap.from(strip, {
             scrollTrigger: { trigger: strip, start: "top 90%", toggleActions: "play none none reverse" },
-            opacity: 0, duration: 1.2, ease: "expo.out",
+            opacity: 0, duration: 1.6, ease: "power4.out",
         });
     }
     initProjects();
@@ -405,7 +405,7 @@ export const initAnimations = (lenis) => {
             const whyImg = whySection.querySelector(".why-main-img");
             const whyGlow = whySection.querySelector(".why-glow");
 
-            if (whyCard) gsap.from(whyCard, { scrollTrigger: { trigger: whySection, start: "top 85%", toggleActions: "play none none reverse" }, y: 60, scale: 0.95, opacity: 0, duration: 1.2, ease: "expo.out" });
+            if (whyCard) gsap.from(whyCard, { scrollTrigger: { trigger: whySection, start: "top 85%", toggleActions: "play none none reverse" }, y: 60, scale: 0.95, opacity: 0, duration: 1.6, ease: "power4.out" });
             if (whyImg) gsap.fromTo(whyImg, { y: 60, rotation: 10, scale: 0.9 }, { y: -60, rotation: -10, scale: 1.1, ease: "none", scrollTrigger: { trigger: whySection, start: "top bottom", end: "bottom top", scrub: 1 } });
             if (whyGlow) gsap.to(whyGlow, { rotation: -180, scale: 4.5, x: 50, ease: "none", scrollTrigger: { trigger: whySection, start: "top bottom", end: "bottom top", scrub: 1.5 } });
         }
@@ -414,7 +414,7 @@ export const initAnimations = (lenis) => {
             const newsContainer = newsletter.querySelector(".newsletter-container");
             const radar = newsletter.querySelector(".newsletter-radar");
 
-            if (newsContainer) gsap.from(newsContainer, { scrollTrigger: { trigger: newsletter, start: "top 85%", toggleActions: "play none none reverse" }, y: 60, scale: 0.95, opacity: 0, duration: 1.2, ease: "expo.out" });
+            if (newsContainer) gsap.from(newsContainer, { scrollTrigger: { trigger: newsletter, start: "top 85%", toggleActions: "play none none reverse" }, y: 60, scale: 0.95, opacity: 0, duration: 1.6, ease: "power4.out" });
             if (radar) gsap.fromTo(radar, { y: 80, rotation: -15, scale: 0.85 }, { y: -80, rotation: 15, scale: 1.15, ease: "none", scrollTrigger: { trigger: newsletter, start: "top bottom", end: "bottom top", scrub: 1 } });
         }
     }
@@ -429,10 +429,10 @@ export const initAnimations = (lenis) => {
 
         if (!card) return;
 
-        gsap.from(card, { scrollTrigger: { trigger: card, start: "top 88%", toggleActions: "play none none reverse" }, y: 70, scale: 0.95, opacity: 0, duration: 1.2, ease: "expo.out" });
-        if (left) gsap.from(left, { scrollTrigger: { trigger: card, start: "top 83%", toggleActions: "play none none reverse" }, x: -40, opacity: 0, duration: 1.2, ease: "expo.out", delay: 0.15 });
-        if (right) gsap.from(right, { scrollTrigger: { trigger: card, start: "top 83%", toggleActions: "play none none reverse" }, x: 40, opacity: 0, duration: 1.2, ease: "expo.out", delay: 0.15 });
-        if (fields.length) gsap.from(fields, { scrollTrigger: { trigger: right, start: "top 80%", toggleActions: "play none none reverse" }, y: 30, opacity: 0, stagger: 0.1, duration: 1, ease: "power3.out", delay: 0.3 });
+        gsap.from(card, { scrollTrigger: { trigger: card, start: "top 88%", toggleActions: "play none none reverse" }, y: 70, scale: 0.95, opacity: 0, duration: 1.6, ease: "power4.out" });
+        if (left) gsap.from(left, { scrollTrigger: { trigger: card, start: "top 83%", toggleActions: "play none none reverse" }, x: -40, opacity: 0, duration: 1.6, ease: "power4.out", delay: 0.15 });
+        if (right) gsap.from(right, { scrollTrigger: { trigger: card, start: "top 83%", toggleActions: "play none none reverse" }, x: 40, opacity: 0, duration: 1.6, ease: "power4.out", delay: 0.15 });
+        if (fields.length) gsap.from(fields, { scrollTrigger: { trigger: right, start: "top 80%", toggleActions: "play none none reverse" }, y: 30, opacity: 0, stagger: 0.08, duration: 1, ease: "power4.out", delay: 0.3 });
     }
     initContact();
 
@@ -445,10 +445,10 @@ export const initAnimations = (lenis) => {
 
         if (!footer) return;
 
-        if (vector) gsap.from(vector, { scrollTrigger: { trigger: footer, start: "top bottom", toggleActions: "play none none reverse" }, opacity: 0, y: 40, duration: 1.5, ease: "expo.out" });
-        if (ellipse) gsap.from(ellipse, { scrollTrigger: { trigger: footer, start: "top 95%", toggleActions: "play none none reverse" }, scale: 0.85, opacity: 0, duration: 1.5, ease: "expo.out", delay: 0.2 });
-        if (logo) gsap.from(logo, { scrollTrigger: { trigger: footer, start: "top 90%", toggleActions: "play none none reverse" }, y: -40, opacity: 0, duration: 1.2, ease: "back.out(1.7)", delay: 0.2 });
-        if (cols.length) gsap.from(cols, { scrollTrigger: { trigger: footer, start: "top 85%", toggleActions: "play none none reverse" }, y: 35, opacity: 0, stagger: 0.1, duration: 1.2, ease: "expo.out", delay: 0.3 });
+        if (vector) gsap.from(vector, { scrollTrigger: { trigger: footer, start: "top bottom", toggleActions: "play none none reverse" }, opacity: 0, y: 40, duration: 1.5, ease: "power4.out" });
+        if (ellipse) gsap.from(ellipse, { scrollTrigger: { trigger: footer, start: "top 95%", toggleActions: "play none none reverse" }, scale: 0.85, opacity: 0, duration: 1.5, ease: "power4.out", delay: 0.2 });
+        if (logo) gsap.from(logo, { scrollTrigger: { trigger: footer, start: "top 90%", toggleActions: "play none none reverse" }, y: -40, opacity: 0, duration: 1.6, ease: "back.out(1.7)", delay: 0.2 });
+        if (cols.length) gsap.from(cols, { scrollTrigger: { trigger: footer, start: "top 85%", toggleActions: "play none none reverse" }, y: 35, opacity: 0, stagger: 0.08, duration: 1.6, ease: "power4.out", delay: 0.3 });
     }
     initFooter();
 
